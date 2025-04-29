@@ -28,7 +28,7 @@
 
     <groupId>io.github.bsgabriel</groupId>
     <artifactId>fireconnect</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

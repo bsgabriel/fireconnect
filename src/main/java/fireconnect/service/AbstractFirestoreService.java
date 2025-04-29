@@ -27,7 +27,7 @@ public abstract class AbstractFirestoreService<T extends AbstractFirestoreEntity
 
     protected abstract String getCollectionName();
 
-    protected DocumentReference addDocument(T obj) {
+    protected final DocumentReference addDocument(T obj) {
         if (isNull(obj))
             throw new FirestoreExecuteException(FIRESTORE_DATA_CREATION, "No data provided to save.");
 
@@ -40,7 +40,7 @@ public abstract class AbstractFirestoreService<T extends AbstractFirestoreEntity
         }
     }
 
-    protected List<T> getAllDocuments(Class<T> type) {
+    protected final List<T> getAllDocuments(Class<T> type) {
         try {
             return this.firestore.collection(this.getCollectionName())
                     .get()
@@ -55,7 +55,7 @@ public abstract class AbstractFirestoreService<T extends AbstractFirestoreEntity
         }
     }
 
-    protected void deleteDocument(String documentId) {
+    protected final void deleteDocument(String documentId) {
         if (isBlank(documentId))
             throw new FirestoreExecuteException(FIRESTORE_DATA_DELETION, "Document id must not be empty.");
 
@@ -69,7 +69,7 @@ public abstract class AbstractFirestoreService<T extends AbstractFirestoreEntity
         }
     }
 
-    protected void updateDocument(String documentId, T data) {
+    protected final void updateDocument(String documentId, T data) {
         if (isBlank(documentId))
             throw new FirestoreExecuteException(FIRESTORE_DATA_UPDATE, "Document id must not be empty.");
 
@@ -83,14 +83,14 @@ public abstract class AbstractFirestoreService<T extends AbstractFirestoreEntity
                 .update(map);
     }
 
-    protected T findDocumentById(String documentId, Class<T> type) {
+    protected final T findDocumentById(String documentId, Class<T> type) {
         if (isBlank(documentId))
             throw new FirestoreExecuteException(FIRESTORE_DATA_RETRIEVAL, "Document id must not be empty.");
 
 
         final DocumentSnapshot document;
         try {
-             document = this.firestore.collection(this.getCollectionName())
+            document = this.firestore.collection(this.getCollectionName())
                     .document(documentId)
                     .get()
                     .get();

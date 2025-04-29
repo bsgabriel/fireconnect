@@ -11,8 +11,7 @@ jobs:
   release:
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release')
     runs-on: ubuntu-latest
-    env:
-      MAVEN_CMD: mvn --batch-mode --settings .github/maven-settings.xml -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -45,11 +44,6 @@ jobs:
       - name: Update POM version
         run: mvn versions:set -DnewVersion=${{ env.VERSION }}
 
-      - name: Verify project
-        run: |
-          export GPG_TTY=$(tty)
-          $MAVEN_CMD clean verify
-
       - name: Update CHANGELOG and commit
         run: |
           sed -i "s/Current/${{ env.VERSION }}/g" CHANGELOG.md
@@ -61,7 +55,7 @@ jobs:
       - name: Publish to Maven Central
         run: |
           export GPG_TTY=$(tty)
-          $MAVEN_CMD deploy -Dgpg.skip=true
+          mvn --batch-mode deploy --settings .github/maven-settings.xml -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
